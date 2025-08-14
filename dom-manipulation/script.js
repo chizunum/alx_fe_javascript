@@ -230,6 +230,7 @@ function addQuote() {
   textEl.value = "";
   catEl.value = "";
   status("Quote added and saved.");
+  populateCategories();
 }
 
 /**** Import / Export ****/
@@ -365,3 +366,45 @@ init();
    <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
 */
 window.importFromJsonFile = importFromJsonFile;
+
+function populateCategories() {
+  const categoryFilter = document.getElementById('categoryFilter');
+  categoryFilter.innerHTML = '<option value="all">All Categories</option>'; // reset
+
+  const categories = [...new Set(quotes.map(q => q.category))];
+  categories.forEach(category => {
+    const option = document.createElement('option');
+    option.value = category;
+    option.textContent = category;
+    categoryFilter.appendChild(option);
+  });
+
+  // Restore last selected category from localStorage
+  const savedCategory = localStorage.getItem('selectedCategory');
+  if (savedCategory) {
+    categoryFilter.value = savedCategory;
+    filterQuotes();
+  }
+}
+
+function filterQuotes() {
+  const selectedCategory = document.getElementById('categoryFilter').value;
+  localStorage.setItem('selectedCategory', selectedCategory);
+
+  let filteredQuotes = quotes;
+  if (selectedCategory !== 'all') {
+    filteredQuotes = quotes.filter(q => q.category === selectedCategory);
+  }
+
+  // Example: just display the first matching quote
+  if (filteredQuotes.length > 0) {
+    const randomQuote = filteredQuotes[Math.floor(Math.random() * filteredQuotes.length)];
+    document.getElementById('quoteDisplay').innerText = randomQuote.text + " — " + randomQuote.category;
+  } else {
+    document.getElementById('quoteDisplay').innerText = "No quotes found in this category.";
+  }
+}
+
+
+
+populateCategories();

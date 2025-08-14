@@ -54,6 +54,10 @@
     <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
     <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
     <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
+    <select id="categoryFilter" onchange="filterQuotes()">
+  <option value="all">All Categories</option>
+</select>
+
     <button id="addQuoteBtn">Add Quote</button>
     <button id="exportQuotes">Export Quotes</button>
 
