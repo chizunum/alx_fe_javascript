@@ -470,6 +470,7 @@ setInterval(() => {
 function syncQuotes() {
   fetchQuotesFromServer(); // Get latest from server
   sendQuotesToServer();    // Push local changes
+  alert("Quotes synced with server!");
 }
 
 function showSyncNotification(message) {
