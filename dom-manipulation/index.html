@@ -53,6 +53,7 @@
     <h3>Add a New Quote</h3>
     <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
     <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+    <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
     <button id="addQuoteBtn">Add Quote</button>
     <button id="exportQuotes">Export Quotes</button>
 
