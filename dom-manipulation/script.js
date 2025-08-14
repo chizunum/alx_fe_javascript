@@ -230,7 +230,10 @@ function addQuote() {
   textEl.value = "";
   catEl.value = "";
   status("Quote added and saved.");
+
   populateCategories();
+  sendQuotesToServer();
+
 }
 
 /**** Import / Export ****/
@@ -408,3 +411,62 @@ function filterQuotes() {
 
 
 populateCategories();
+
+const SERVER_URL = 'https://jsonplaceholder.typicode.com/posts'; // Simulated endpoint
+
+async function fetchQuotesFromServer() {
+  try {
+    const response = await fetch(SERVER_URL);
+    const serverData = await response.json();
+
+    // Convert server data to quote format (simulation)
+    const serverQuotes = serverData.map(item => ({
+      text: item.title,
+      category: "Server"
+    }));
+
+    handleServerSync(serverQuotes);
+  } catch (error) {
+    console.error("Error fetching server quotes:", error);
+  }
+}
+
+async function sendQuotesToServer() {
+  try {
+    await fetch(SERVER_URL, {
+      method: 'POST',
+      body: JSON.stringify(quotes),
+      headers: { 'Content-Type': 'application/json' }
+    });
+    console.log("Local quotes sent to server.");
+  } catch (error) {
+    console.error("Error sending quotes to server:", error);
+  }
+}
+
+function handleServerSync(serverQuotes) {
+  let updated = false;
+
+  // Conflict resolution: server wins
+  serverQuotes.forEach(serverQuote => {
+    const existsLocally = quotes.some(localQuote => localQuote.text === serverQuote.text);
+    if (!existsLocally) {
+      quotes.push(serverQuote);
+      updated = true;
+    }
+  });
+
+  if (updated) {
+    saveQuotes();
+    populateCategories();
+    showSyncNotification("Quotes updated from server (server version used).");
+  }
+}
+
+setInterval(() => {
+  fetchQuotesFromServer();
+}, 30000); // every 30 seconds
+
+function showSyncNotification(message) {
+  alert(message); // Basic version — you can later replace with custom UI banner
+}
