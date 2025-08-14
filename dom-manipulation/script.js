@@ -467,6 +467,11 @@ setInterval(() => {
   fetchQuotesFromServer();
 }, 30000); // every 30 seconds
 
+function syncQuotes() {
+  fetchQuotesFromServer(); // Get latest from server
+  sendQuotesToServer();    // Push local changes
+}
+
 function showSyncNotification(message) {
   alert(message); // Basic version — you can later replace with custom UI banner
 }
